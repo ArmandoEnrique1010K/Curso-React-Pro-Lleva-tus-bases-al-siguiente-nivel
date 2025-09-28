@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 export const useCounter = ({ maxCount = 1 }) => {
 
     const [counter, setCounter] = useState(5);
-    const elementToAnimate = useRef<any>(null);
+    const elementToAnimate = useRef<HTMLHeadingElement>(null);
 
     const tl = useRef(gsap.timeline())
 

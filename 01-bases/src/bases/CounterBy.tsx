@@ -4,19 +4,23 @@ interface CounterByProps {
     initialValue?: number;
 }
 
+interface CounterState {
+    counter: number;
+    clicks: number;
+}
+
 export const CounterBy = ({ initialValue = 5 }: CounterByProps) => {
 
-    const [counterState, setCounterState] = useState({
+    const [{ counter, clicks }, setCounterState] = useState<CounterState>({
         counter: initialValue,
         clicks: 0,
     });
 
-    const { counter, clicks } = counterState;
 
     const handleClick = (value: number) => {
-        setCounterState(prev => ({
-            counter: prev.counter + value,
-            clicks: prev.clicks + 1,
+        setCounterState(({ counter }) => ({
+            counter: counter + value,
+            clicks: clicks + 1,
         }));
     }
 
@@ -25,13 +29,13 @@ export const CounterBy = ({ initialValue = 5 }: CounterByProps) => {
             <h1>
                 CounterBy: {counter}
             </h1>
-            <h2>
+            <p>
                 Clicks: {clicks}
-            </h2>
+            </p>
 
             <button onClick={() => handleClick(1)}>+1</button>
             <button onClick={() => handleClick(5)}>+5</button>
-
+            <hr />
         </>
     )
 }

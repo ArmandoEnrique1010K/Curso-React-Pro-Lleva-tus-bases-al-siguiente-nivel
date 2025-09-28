@@ -18,6 +18,7 @@ export const Counter = ({ initialValue = 0 }: CounterProps) => {
                 Counter: {counter}
             </h1>
             <button onClick={handleClick}>+1</button>
+            <hr />
         </>
     )
 }

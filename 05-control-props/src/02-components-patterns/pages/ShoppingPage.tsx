@@ -1,65 +1,11 @@
-import { useState } from "react";
 import { ProductButtons, ProductCard, ProductImage, ProductTitle } from "../components"
-import type { Product } from "../interfaces/interfaces";
 import '../styles/custom-styles.css'
-
-const product = {
-    id: '1',
-    title: 'Coffee Mug - Card',
-    img: './coffee-mug.png'
-}
-
-const product2 = {
-    id: '2',
-    title: 'Coffee Mug - Meme',
-    img: './coffee-mug2.png'
-}
-
-const products: Product[] = [product, product2];
-
-interface ProductInCart extends Product {
-    count: number;
-}
+import { products } from "../data/products";
+import { useShoppingCart } from "../hooks/useShoppingCart";
 
 export const ShoppingPage = () => {
 
-    const [shopingCart, setShopingCart] = useState<{ [key: string]: ProductInCart }>({}
-        // {
-        //     '1': { ...product, count: 10 },
-        //     '2': { ...product2, count: 20 }
-        // }
-    );
-
-    // console.log(shopingCart);
-
-    const onProductCountChange = ({ count, product }: { count: number, product: Product }) => {
-        // console.log(count, product)
-
-        // shopingCart[product.id] = {
-        //     ...product,
-        //     count
-        // }
-
-        setShopingCart(oldShoppingCart => {
-
-            if (count === 0) {
-                const { [product.id]: toDelete, ...rest } = oldShoppingCart;
-                console.log(toDelete)
-                return {
-                    ...rest
-                }
-            }
-
-            return {
-                ...oldShoppingCart,
-                [product.id]: {
-                    ...product,
-                    count
-                }
-            }
-        })
-        console.log(shopingCart)
-    }
+    const { shopingCart, onProductCountChange } = useShoppingCart();
 
     return (
         <div>
@@ -138,3 +84,4 @@ export const ShoppingPage = () => {
         </div>
     )
 }
+

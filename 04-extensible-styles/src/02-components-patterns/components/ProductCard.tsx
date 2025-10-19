@@ -1,10 +1,7 @@
 import { useProduct } from '../hooks/useProduct'
-import { createContext } from 'react';
-import type { ProductContextProps, ProductCardProps } from '../interfaces/interfaces';
+import { createContext, type ReactElement } from 'react';
+import type { ProductContextProps, Product } from '../interfaces/interfaces';
 import styles from '../styles/styles.module.css'
-// import { ProductTitle } from './ProductTitle';
-// import { ProductImage } from './ProductImage';
-// import { ProductButtons } from './ProductButtons';
 
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -13,13 +10,14 @@ const { Provider } = ProductContext
 
 
 
+export interface Props {
+    children?: ReactElement | ReactElement[]
+    product: Product;
+    className?: string;
+}
 
-// interface ProductButtonsProps {
-//     counter: number,
-//     increaseBy: (quantity: number) => void
-// }
 
-export const ProductCard = ({ children, product }: ProductCardProps) => {
+export const ProductCard = ({ children, product, className }: Props) => {
 
     const { counter, increaseBy } = useProduct();
 
@@ -27,19 +25,10 @@ export const ProductCard = ({ children, product }: ProductCardProps) => {
         <Provider value={{
             counter, increaseBy, product
         }}>
-            <div className={styles.productCard}>
-
+            <div className={` ${styles.productCard} ${className}`}>
                 {children}
-                {/* <ProductImage img={product.img} />
-            <ProductTitle title={product.title} />
-            <ProductButtons counter={counter} increaseBy={increaseBy} /> */}
             </div>
 
         </Provider>
     )
 }
-
-
-// ProductCard.Title = ProductTitle;
-// ProductCard.Image = ProductImage;
-// ProductCard.Buttons = ProductButtons;

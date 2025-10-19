@@ -39,7 +39,7 @@ export const routes: Route[] = [
     //     name: 'Lazy-3'
     // },
     {
-        to: '/lazyload',
+        to: '/lazyload/',
         path: '/lazyload/*',
         Component: LazyLayout,
         name: 'LazyLayout - Dashboard'

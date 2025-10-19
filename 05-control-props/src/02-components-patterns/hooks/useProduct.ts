@@ -1,13 +1,33 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import type { OnChangeArgs, Product } from "../interfaces/interfaces";
 
-export const useProduct = () => {
+export interface UseProductProps {
+    product: Product;
+    onChange?: (args: OnChangeArgs) => void;
+    value?: number;
+}
 
-    const [counter, setCounter] = useState(0)
+export const useProduct = ({ onChange, product, value = 0 }: UseProductProps) => {
+
+    const [counter, setCounter] = useState(value)
+    // console.log({ value })
 
     const increaseBy = (value: number) => {
-        setCounter(prev => Math.max(prev + value, 0))
+
+        const newValue = Math.max(counter + value, 0);
+        setCounter(newValue)
+
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        onChange && onChange({
+            product: product,
+            count: newValue
+        })
     }
 
+    useEffect(() => {
+        setCounter(value)
+    }, [value])
 
     return {
         counter,

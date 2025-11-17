@@ -1,9 +1,39 @@
-import { useFormik } from 'formik'
+import { useFormik, type FormikErrors } from 'formik'
 import '../styles/styles.css'
+
+interface FormValues {
+    firstName: string;
+    lastName: string;
+    email: string;
+}
 
 export const FormikBasicPage = () => {
 
-    const { handleChange, values, handleSubmit } = useFormik({
+    const validate = ({ firstName, lastName, email }: FormValues) => {
+        const errors: FormikErrors<FormValues> = {};
+
+        if (!firstName) {
+            errors.firstName = 'Required';
+        } else if (firstName.length >= 15) {
+            errors.firstName = 'Must be 15 characters or less';
+        }
+
+        if (!lastName) {
+            errors.lastName = 'Required';
+        } else if (lastName.length >= 10) {
+            errors.lastName = 'Must be 10 characters or less';
+        }
+
+        if (!email) {
+            errors.email = 'Required';
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            errors.email = 'Invalid email address';
+        }
+
+        return errors;
+    }
+
+    const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik({
         initialValues: {
             firstName: '',
             lastName: '',
@@ -11,7 +41,9 @@ export const FormikBasicPage = () => {
         },
         onSubmit: (values) => {
             console.log(values)
-        }
+        },
+        // validate: validate
+        validate
     })
 
     return (
@@ -22,31 +54,39 @@ export const FormikBasicPage = () => {
             <form onSubmit={handleSubmit} noValidate>
                 <label htmlFor="firstName">First Name</label>
                 <input
+                    id='firstName'
                     type="text"
                     name="firstName"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.firstName}
                 />
-                <span>First name is required</span>
+
+                {touched.firstName && errors.firstName && <span>{errors.firstName}</span>}
 
                 <label htmlFor="lastName">Last Name</label>
                 <input
+                    id='lastName'
                     type="text"
                     name="lastName"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.lastName}
                 />
-                <span>Last name is required</span>
+
+                {touched.lastName && errors.lastName && <span>{errors.lastName}</span>}
 
                 <label htmlFor="email">Email Address</label>
                 <input
+                    id='email'
                     type="email"
                     name="email"
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     value={values.email}
                 />
-                <span>Email is required</span>
-                <span>Check for an valid email format</span>
+
+                {touched.email && errors.email && <span>{errors.email}</span>}
 
                 <button type="submit">Submit</button>
             </form>

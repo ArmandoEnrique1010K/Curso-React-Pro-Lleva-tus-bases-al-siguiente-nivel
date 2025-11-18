@@ -12,18 +12,13 @@ interface Props {
 export const MyTextInput = ({ label, ...props }: Props) => {
 
     const [field] = useField(props)
-    // console.log(field)
 
     return (
         <>
             <label htmlFor={props.id || props.name}>{label}</label>
-            <input className="text-input" type="text" {...field} {...props} />
+            <input id={props.id || props.name} className="text-input" type="text" {...field} {...props} />
             <ErrorMessage name={props.name} component="span" />
 
-            {/* {
-                // Errores de validación
-                meta.touched && meta.error && <span className="error">{meta.error}</span>
-            } */}
         </>
     )
 }

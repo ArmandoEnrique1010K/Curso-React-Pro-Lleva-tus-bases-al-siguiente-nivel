@@ -1,13 +1,40 @@
 import { Formik, Form } from "formik"
 import formJson from "../data/custom-form.json"
-import { MyTextInput } from "../components"
+import { MySelect, MyTextInput } from "../components"
+import * as Yup from 'yup';
 
 // eslint-disable-next-line
 const initialValues: { [key: string]: any } = {};
+// eslint-disable-next-line
+const requiredFields: { [key: string]: any } = {};
 
 for (const input of formJson) {
     initialValues[input.name] = "";
+
+    if (!input.validations) continue;
+
+    let schema = Yup.string();
+
+    for (const rule of input.validations) {
+        if (rule.type === 'required') {
+            schema = schema.required('Este campo es requerido');
+        }
+
+        if (rule.type === 'minLenght') {
+            // eslint-disable-next-line
+            schema = schema.min((rule as any).value || 1, `Minimo de ${(rule as any).value || 2} caracteres`);
+        }
+
+        if (rule.type === 'email') {
+            schema = schema.email('Revise el formato del email');
+        }
+        // ... otras reglas
+    }
+
+    requiredFields[input.name] = schema;
 }
+
+const validationSchema = Yup.object({ ...requiredFields });
 
 export const DynamicForm = () => {
     return (
@@ -16,17 +43,37 @@ export const DynamicForm = () => {
 
             <Formik
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={(values) => console.log(values)}>
                 {() => (
                     <Form noValidate>
-                        {formJson.map(({ type, name, placeholder, label }) => {
-                            return <MyTextInput
-                                key={name}
-                                // eslint-disable-next-line
-                                type={(type as any)}
-                                name={name}
-                                label={label}
-                                placeholder={placeholder} />
+                        {formJson.map(({ type, name, placeholder, label, options }) => {
+
+                            if (type === 'input' || type === 'password' || type === 'email') {
+                                return <MyTextInput
+                                    key={name}
+                                    // eslint-disable-next-line
+                                    type={(type as any)}
+                                    name={name}
+                                    label={label}
+                                    placeholder={placeholder} />
+
+                            } else if (type === 'select') {
+                                return <MySelect
+                                    key={name}
+                                    label={label}
+                                    name={name}
+                                >
+                                    <option value="">Select an option</option>
+                                    {
+                                        options?.map(({ id, label }) => (
+                                            <option key={id} value={id}>{label}</option>
+                                        ))
+                                    }
+                                </MySelect>
+                            }
+
+                            throw new Error(`El type: ${type} no es soportado`)
                         })}
                         <button type="submit">Submit</button>
                     </Form>
